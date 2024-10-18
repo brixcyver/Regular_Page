@@ -11,9 +11,13 @@ function setupAddToCartButtons() {
         button.addEventListener('click', function () {
             const grandgrandParent = this.parentElement.parentElement.parentElement;
             const parent = this.parentElement;
+            
+            // Change from selecting 'h3' directly to using 'querySelector' for the product name
             const name = grandgrandParent.querySelector('h3').innerText;
-            const ounce = parent.querySelector('span:nth-child(1)').innerText;
-            const price = parent.querySelector('span:nth-child(2)').innerText;
+            
+            // Select the first and second 'p' elements for size and price
+            const ounce = parent.querySelector('p:nth-child(1)').innerText;
+            const price = parent.querySelector('p:nth-child(2)').innerText;
 
             const itemName = name + ` (${ounce})`;
             const itemPrice = parseFloat(price.replace('₱', ''));
@@ -31,7 +35,7 @@ function setupAddToCartButtons() {
 function addToCart(item) {
     let quantity = prompt("How many of " + item.name + " would you like to add?", "1");
     
-    if (quantity === null) {//canceled
+    if (quantity === null) { // If the user cancels the prompt
         return; 
     }
 
@@ -44,16 +48,16 @@ function addToCart(item) {
     
     let cart = getCart();
     const existingItem = cart.find(cartItem => cartItem.name === item.name);
-    const totalCost = item.price * quantity; // Keep the total cost separate
+    const totalCost = item.price * quantity; // Calculate total cost
 
     if (existingItem) {
         existingItem.quantity += quantity;
-        existingItem.totalPrice += totalCost; // Maintain a separate total price
+        existingItem.totalPrice += totalCost; // Update total price for existing items
     } else {
         cart.push({ 
             ...item, 
             quantity: quantity, 
-            totalPrice: totalCost // Add a new totalPrice field for the cost
+            totalPrice: totalCost // Add total price for new items
         }); 
     }
 
@@ -61,8 +65,7 @@ function addToCart(item) {
     alert(quantity + " of " + item.name + " added to cart! \nCost: ₱ " + totalCost);
 }
 
-
-// Get current cart from localStorage
+// Get the current cart from localStorage
 function getCart() {
     let cart = localStorage.getItem("cartRegular");
     if (cart) {
